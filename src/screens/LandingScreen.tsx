@@ -1,10 +1,42 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Image, Dimensions } from "react-native";
 import * as Location from 'expo-location';
 
 const screenWidth = Dimensions.get("screen").width;
 
 const LandingScreen = () => {
+    const [errMsg, setErrMsg] = useState('')
+    const [address, setAddress] = useState()
+    const [displayAddress, setDisplayAddress] = useState("")
+
+    useEffect(() => {
+        (async () => {
+            let {status} = await Location.requestPermissionsAsync();
+            if(status !== "granted") {
+                setErrMsg('Permission to access location is not granted.')
+            }
+
+            let location: any = await Location.getCurrentPositionAsync();
+
+            const { coords } = location;
+
+            if(coords) {
+                const { longitude, latitude } = coords;
+
+                let addressResponse: any = await Location.reverseGeocodeAsync({latitude, longitude})
+
+                for(let item of addressResponse) {
+                    setAddress(item)
+                    let currentAddress = `${item.name}, ${item.street}, ${item.postalCode}, ${item.country}`
+                    setDisplayAddress(currentAddress);
+                    return;
+                }
+            }
+
+        })
+    }, [])
+
+
   return (
     <View style={styles.container}>
       <View style={styles.navigation} />
