@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Image, Dimensions } from "react-native";
 import * as Location from 'expo-location';
+import { useNavigation } from './../utils'
 
 const screenWidth = Dimensions.get("screen").width;
 
 const LandingScreen = () => {
+    const { navigate } = useNavigation()
+
     const [errMsg, setErrMsg] = useState('')
     const [address, setAddress] = useState()
     const [displayAddress, setDisplayAddress] = useState("")
 
     useEffect(() => {
         (async () => {
-            let {status} = await Location.requestPermissionsAsync();
+            let {status} = await Location.requestForegroundPermissionsAsync();
             if(status !== "granted") {
                 setErrMsg('Permission to access location is not granted.')
             }
@@ -29,11 +32,20 @@ const LandingScreen = () => {
                     setAddress(item)
                     let currentAddress = `${item.name}, ${item.street}, ${item.postalCode}, ${item.country}`
                     setDisplayAddress(currentAddress);
+
+                    if(currentAddress.length > 0) {
+                        setTimeout(() => {
+                            navigate('homeStack')
+                        }, 2000)
+                    }
+
+
+
                     return;
                 }
             }
 
-        })
+        })();
     }, [])
 
 
