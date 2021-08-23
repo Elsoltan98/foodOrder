@@ -10,7 +10,7 @@ const LandingScreen = () => {
 
     const [errMsg, setErrMsg] = useState('')
     const [address, setAddress] = useState()
-    const [displayAddress, setDisplayAddress] = useState("")
+    const [displayAddress, setDisplayAddress] = useState("Waiting for current location")
 
     useEffect(() => {
         (async () => {
@@ -60,7 +60,7 @@ const LandingScreen = () => {
         <View style={styles.addressContainer}>
           <Text style={styles.addressTitle}>Your delivery address</Text>
         </View>
-          <Text style={styles.addressText}>Waiting for current location</Text>
+          <Text style={styles.addressText}>{displayAddress}</Text>
       </View>
       <View style={styles.footer} />
     </View>
